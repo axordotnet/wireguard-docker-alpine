@@ -1,0 +1,4 @@
+*.key
+*.conf
+.env
+!.env.example

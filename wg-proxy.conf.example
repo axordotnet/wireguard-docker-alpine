@@ -1,0 +1,11 @@
+[Interface]
+Address = 10.90.0.1/32
+PrivateKey = REPLACE_LOCAL_PRIVATE_KEY
+ListenPort = 51820
+MTU = 1380
+
+[Peer]
+PublicKey = REPLACE_PEER_PUBLIC_KEY
+AllowedIPs = 10.90.0.2/32
+Endpoint = 192.0.2.2:51820
+PersistentKeepalive = 25

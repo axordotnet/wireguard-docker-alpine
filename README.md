@@ -80,7 +80,10 @@ utilisé par ce test dépend du runner ; le repli logiciel sur DSM reste à test
 
 - Pull request : validation uniquement, aucun accès de publication.
 - Main, lancement manuel sur main et reconstruction hebdomadaire : tag edge.
-- Tag Git `vX.Y.Z` : image `X.Y.Z`, avec métadonnées, SBOM et provenance.
+- Tag Git `vX.Y.Z` ou `X.Y.Z` : image `X.Y.Z`, avec métadonnées, SBOM et provenance.
+  Le titre d’une release (par exemple « V1 ») n’est pas son tag Git : la release
+  « V1 » utilise le tag `1.0.0` et l’image `:1.0.0`.
+- Les runners sont fixés à Ubuntu 24.04 ; Docker Login v4 utilise Node.js 24.
 - GHCR reçoit l'image via le GITHUB_TOKEN temporaire ; aucun PAT à stocker.
 - Après la première publication, vérifier la visibilité **publique du package GHCR** :
   elle peut être privée indépendamment du dépôt public.

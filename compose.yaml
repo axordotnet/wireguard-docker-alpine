@@ -15,6 +15,8 @@ services:
       - /tmp:rw,noexec,nosuid,size=16m
     cap_add:
       - NET_ADMIN
+      # Read mode-0600 bind mounts owned by a different host UID.
+      - DAC_READ_SEARCH
     devices:
       - /dev/net/tun:/dev/net/tun
     environment:

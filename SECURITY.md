@@ -14,7 +14,8 @@ Do not post secrets in public issues or logs.
 ## Threat model
 
 This container configures a VPN interface and necessarily runs as root with
-NET_ADMIN. Host networking gives it control of the host network namespace.
+NET_ADMIN. DAC_READ_SEARCH allows reading mode-0600 bind-mounted configuration
+owned by another host UID; mount no unrelated private directories. Host networking gives it control of the host network namespace.
 Use a dedicated container namespace when host access is unnecessary.
 Never enable privileged or SYS_MODULE. Load host modules outside this image.
 

@@ -111,7 +111,9 @@ Sources : [WireGuard](https://www.wireguard.com/),
 ## Sécurité et contribution
 
 Le Compose utilise une racine en lecture seule, des répertoires temporaires
-en mémoire, `no-new-privileges` et uniquement la capacité `NET_ADMIN`.
+en mémoire, `no-new-privileges` et les capacités `NET_ADMIN` et `DAC_READ_SEARCH`.
+Cette dernière permet de lire une configuration 0600 appartenant à un autre UID
+sur l'hôte, sans lui donner de droits d'écriture supplémentaires.
 Les hooks qui écrivent ailleurs doivent être adaptés explicitement.
 Le réseau hôte reste un privilège important ; aucun kill switch n'est fourni.
 

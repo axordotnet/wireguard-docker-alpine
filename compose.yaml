@@ -1,6 +1,6 @@
 services:
   wireguard:
-    image: ghcr.io/axordotnet/wireguard-docker-alpine:edge
+    image: ghcr.io/axordotnet/wireguard-docker-alpine:1.1.0
     # For a local build: docker compose build
     build: .
     network_mode: host
@@ -20,7 +20,7 @@ services:
     devices:
       - /dev/net/tun:/dev/net/tun
     environment:
-      WG_QUICK_USERSPACE_IMPLEMENTATION: wireguard-go
+      WG_IMPLEMENTATION: auto
     volumes:
       - type: bind
         source: ./wg-proxy.conf
@@ -29,7 +29,7 @@ services:
         bind:
           create_host_path: false
     healthcheck:
-      test: [CMD, wg, show, wg-proxy]
+      test: [CMD, /usr/local/bin/wireguard-healthcheck]
       interval: 30s
       timeout: 5s
       retries: 3

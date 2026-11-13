@@ -3,7 +3,7 @@ set -euo pipefail
 image="${1:-wireguard-test}"
 tmp="$(mktemp -d)"
 prefix="wg-test-$"
-hardening=(--read-only --cap-drop ALL --cap-add NET_ADMIN --security-opt no-new-privileges --tmpfs /run:rw,noexec,nosuid,size=16m --tmpfs /tmp:rw,noexec,nosuid,size=16m)
+hardening=(--read-only --cap-drop ALL --cap-add NET_ADMIN --security-opt no-new-privileges --tmpfs '/run:rw,noexec,nosuid,size=16m' --tmpfs '/tmp:rw,noexec,nosuid,size=16m')
 network="$prefix-net"
 a="$prefix-a"
 b="$prefix-b"
@@ -46,7 +46,7 @@ if docker run --rm "${hardening[@]}" -v "$tmp/placeholder:/etc/wireguard:ro" "$i
   echo 'Placeholder configuration was accepted'; exit 1
 fi
 passed=false
-for attempt in $(seq 1 20); do
+for _ in $(seq 1 20); do
   if docker exec "$a" ping -c 1 -W 1 10.90.0.2 >/dev/null 2>&1; then passed=true; break; fi
   sleep 1
 done

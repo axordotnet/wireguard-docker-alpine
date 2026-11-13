@@ -1,4 +1,5 @@
 *.key
 *.conf
 .env
+.env.*
 !.env.example

@@ -2,7 +2,7 @@
 set -euo pipefail
 image="${1:-wireguard-test}"
 tmp="$(mktemp -d)"
-prefix="wg-test-$"
+prefix="wg-test-$$"
 hardening=(--read-only --cap-drop ALL --cap-add NET_ADMIN --security-opt no-new-privileges --tmpfs '/run:rw,noexec,nosuid,size=16m' --tmpfs '/tmp:rw,noexec,nosuid,size=16m')
 network="$prefix-net"
 a="$prefix-a"

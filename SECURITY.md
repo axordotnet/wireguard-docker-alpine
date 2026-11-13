@@ -21,7 +21,7 @@ Never enable privileged or SYS_MODULE. Load host modules outside this image.
 Mount only trusted configuration, read-only, mode 0600. wg-quick hooks execute
 arbitrary commands with the container's network privileges and may appear in
 logs. Keep secrets out of hooks, image layers, environment dumps and Git.
-Do not use SaveConfig with read-only mounts. DNS directives are not supported.
+Do not use SaveConfig with read-only mounts. DNS directives modify resolver files and may fail with read-only mounts; prefer external DNS configuration.
 The healthcheck checks interface presence, not remote reachability or a handshake.
 This image provides no automatic kill switch. A failed tunnel can leave ordinary
 routes usable; enforce any fail-closed requirements in a separately reviewed firewall.

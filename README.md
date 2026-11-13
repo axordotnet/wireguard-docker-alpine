@@ -51,8 +51,8 @@ docker compose exec wireguard wg show wg-proxy
 
 Le healthcheck confirme seulement que l'interface existe. Vérifier un handshake
 récent, les compteurs de transfert et l'accès au service distant.
-`wg-quick` traite le fichier : DNS nécessite des outils supplémentaires absents
-de cette image. Préférer des routes précises plutôt qu'une route par défaut.
+`wg-quick` traite le fichier : DNS modifie le résolveur et peut échouer avec le système de fichiers en lecture seule ;
+gérer de préférence le DNS hors de ce conteneur. Préférer des routes précises plutôt qu'une route par défaut.
 Ne pas activer SaveConfig avec le montage en lecture seule.
 Les hooks PreUp/PostUp/etc. exécutent du code privilégié : ne charger que votre configuration.
 

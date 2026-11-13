@@ -84,7 +84,8 @@ bash tests/tunnel.sh wireguard-test userspace
 ~~~
 
 Tests use a disposable Linux host and subnet 172.30.90.0/24.
-CI does not certify Synology DSM; no AXORLOGY validation has been performed.
+CI validates the image on Linux runners; compatibility with other host environments
+must be verified separately.
 
 Dependabot and uncached edge rebuilds run daily. Stable tags are not overwritten:
 security fixes require a new patch release, following the maintenance procedure.

@@ -17,7 +17,7 @@ bash tests/tunnel.sh wireguard-test
 
 CI tests a bidirectional tunnel, graceful shutdown and failure cases with the
 hardened runtime options. Keep existing configurations and the wg-proxy interface
-compatible. Synology DSM must also be tested on the target device.
+compatible. Platform-specific compatibility should also be tested on the relevant target environment.
 
 Review Dependabot PRs and merge only after checks succeed. Major Alpine or Action
 updates require review of upstream release notes. No automatic merging is enabled.

@@ -5,9 +5,9 @@ Elle utilise WireGuard natif quand le noyau le permet, et le mode logiciel en re
 Ce n'est pas une interface d'administration ni un service VPN hébergé.
 
 Image cible : `ghcr.io/axordotnet/wireguard-docker-alpine`.
-Architecture publiée : **linux/amd64**, notamment les NAS Synology x86-64.
-Le fonctionnement sur une version précise de DSM doit être validé sur cette cible ;
-un test CI Linux ne certifie pas DSM.
+Architecture publiée : **linux/amd64**.
+La CI valide l'image sur des runners Linux ; la compatibilité avec d'autres
+environnements hôtes doit être vérifiée séparément.
 
 ## Prérequis
 
@@ -17,7 +17,7 @@ un test CI Linux ne certifie pas DSM.
 - Une paire de clés distincte par pair, configuration privée hors Git.
 - Aucun conflit d'adresse, de port ou d'interface `wg-proxy`.
 
-Sur Synology, charger TUN au démarrage si nécessaire. Le conteneur n'installe
+Sur l'hôte, charger TUN au démarrage si nécessaire. Le conteneur n'installe
 aucun module noyau et n'exige ni `privileged` ni `SYS_MODULE`.
 Un compte administrateur reste nécessaire pour préparer les fichiers et Docker.
 
@@ -56,7 +56,7 @@ gérer de préférence le DNS hors de ce conteneur. Préférer des routes préci
 Ne pas activer SaveConfig avec le montage en lecture seule.
 Les hooks PreUp/PostUp/etc. exécutent du code privilégié : ne charger que votre configuration.
 
-## Reverse proxy et Synology
+## Intégration avec un reverse proxy
 
 Le Compose fourni utilise le réseau de l'hôte. Pour un reverse proxy déjà
 conteneurisé, remplacer `network_mode: host` par `network_mode: container:NOM_DU_PROXY`
@@ -70,13 +70,13 @@ Ne pas déclarer ports ou networks sur le service partageant cet espace réseau.
 
 WireGuard n'est pas un réseau Docker overlay. Les applications distantes doivent
 publier leurs ports sur une adresse accessible par le tunnel. La découverte de
-services (par exemple kop/Redis) reste un mécanisme séparé.
+services reste un mécanisme séparé.
 
 ## Construction, publication et maintenance
 
 Le workflow valide le Compose et les scripts, construit l'image puis teste un tunnel
 bidirectionnel sur un runner Linux avant publication. Les modes noyau et logiciel sont testés séparément en IPv4/IPv6, avec arrêt et redémarrage.
-Aucune validation sur AXORLOGY ou DSM n'a été effectuée.
+La validation CI ne garantit pas la compatibilité avec tous les systèmes hôtes.
 
 - Pull request : validation uniquement, aucun accès de publication.
 - Main, lancement manuel sur main et reconstruction quotidienne : tag edge.

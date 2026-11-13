@@ -47,11 +47,11 @@ if docker run --rm "${hardening[@]}" -v "$tmp/placeholder:/etc/wireguard:ro" "$i
 fi
 passed=false
 for _ in $(seq 1 20); do
-  if docker exec "$a" ping -c 1 -W 1 10.90.0.2 >/dev/null 2>&1; then passed=true; break; fi
+  if docker run --rm --network "container:$a" --cap-drop ALL --cap-add NET_RAW --entrypoint ping "$image" -c 1 -W 1 10.90.0.2 >/dev/null 2>&1; then passed=true; break; fi
   sleep 1
 done
-[ "$passed" = true ] || { echo 'Tunnel test failed'; exit 1; }
-docker exec "$b" ping -c 1 -W 2 10.90.0.1 >/dev/null
+[ "$passed" = true ] || { echo 'Tunnel test failed'; docker logs "$a"; docker logs "$b"; exit 1; }
+docker run --rm --network "container:$b" --cap-drop ALL --cap-add NET_RAW --entrypoint ping "$image" -c 1 -W 2 10.90.0.1 >/dev/null
 # A second instance must not take over or delete the existing shared interface.
 if docker run --rm --network "container:$a" "${hardening[@]}" -v "$tmp/a:/etc/wireguard:ro" "$image" >/dev/null 2>&1; then
   echo 'Existing interface was accepted'; exit 1

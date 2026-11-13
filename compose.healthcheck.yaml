@@ -1,0 +1,8 @@
+# Optional connectivity probing, merged with compose.yaml.
+# Choose a peer IP routed exclusively through wg-proxy that answers ICMP.
+services:
+  wireguard:
+    cap_add:
+      - NET_RAW
+    environment:
+      WG_HEALTHCHECK_TARGET: ${WG_HEALTHCHECK_TARGET:?Set an IPv4 or IPv6 tunnel peer address}

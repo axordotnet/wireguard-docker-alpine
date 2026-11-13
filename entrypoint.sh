@@ -11,12 +11,9 @@ if ip link show wg-proxy >/dev/null 2>&1; then
   echo 'Interface wg-proxy already exists; refusing to take it over.' >&2
   exit 1
 fi
-cleanup() {
-  wg-quick down "$config" || true
-}
 wg-quick up "$config"
 trap 'exit 0' TERM INT
-trap cleanup EXIT
+trap 'wg-quick down "$config" || true' EXIT
 while wg show wg-proxy >/dev/null 2>&1; do
   sleep 5 &
   wait $! || true

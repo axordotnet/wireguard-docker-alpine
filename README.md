@@ -51,8 +51,8 @@ docker compose exec wireguard wg show wg-proxy
 
 Le healthcheck confirme seulement que l'interface existe. Vérifier un handshake
 récent, les compteurs de transfert et l'accès au service distant.
-`wg-quick` traite le fichier : DNS nécessite des outils supplémentaires absents
-de cette image. Préférer des routes précises plutôt qu'une route par défaut.
+`wg-quick` traite le fichier : DNS modifie le résolveur et peut échouer avec le système de fichiers en lecture seule ;
+gérer de préférence le DNS hors de ce conteneur. Préférer des routes précises plutôt qu'une route par défaut.
 Ne pas activer SaveConfig avec le montage en lecture seule.
 Les hooks PreUp/PostUp/etc. exécutent du code privilégié : ne charger que votre configuration.
 
@@ -79,7 +79,7 @@ bidirectionnel sur un runner Linux avant publication. Le mode noyau ou logiciel
 utilisé par ce test dépend du runner ; le repli logiciel sur DSM reste à tester.
 
 - Pull request : validation uniquement, aucun accès de publication.
-- Main, lancement manuel sur main et reconstruction hebdomadaire : tag edge.
+- Main, lancement manuel sur main et reconstruction quotidienne : tag edge.
 - Tag Git `vX.Y.Z` ou `X.Y.Z` : image `X.Y.Z`, avec métadonnées, SBOM et provenance.
   Le titre d’une release (par exemple « V1 ») n’est pas son tag Git : la release
   « V1 » utilise le tag `1.0.0` et l’image `:1.0.0`.
@@ -91,7 +91,7 @@ utilisé par ce test dépend du runner ; le repli logiciel sur DSM reste à test
   Conserver le digest précédent pour revenir en arrière.
 - Dependabot propose les mises à jour de la base Docker et des Actions.
 
-Alpine reste fixé à la branche 3.22 ; les paquets installés sont ceux disponibles
+Alpine est fixé à la version 3.24.4, suivie quotidiennement par Dependabot ; les paquets installés sont ceux disponibles
 à la construction. Les reconstruire régulièrement et examiner les changements
 avant déploiement. La cadence CI ne met à jour aucun hôte automatiquement.
 
@@ -105,5 +105,26 @@ bash tests/tunnel.sh wireguard-test
 Les logiciels embarqués conservent leurs licences amont.
 Sources : [WireGuard](https://www.wireguard.com/),
 [wireguard-go](https://github.com/WireGuard/wireguard-go),
-[Alpine](https://pkgs.alpinelinux.org/package/v3.22/community/x86_64/wireguard-go),
+[Alpine](https://pkgs.alpinelinux.org/package/v3.24/community/x86_64/wireguard-go),
 [publication GHCR](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry).
+
+## Sécurité et contribution
+
+Le Compose utilise une racine en lecture seule, des répertoires temporaires
+en mémoire, `no-new-privileges` et les capacités `NET_ADMIN` et `DAC_READ_SEARCH`.
+Cette dernière permet de lire une configuration 0600 appartenant à un autre UID
+sur l'hôte, sans lui donner de droits d'écriture supplémentaires.
+Les hooks qui écrivent ailleurs doivent être adaptés explicitement.
+Le réseau hôte reste un privilège important ; aucun kill switch n'est fourni.
+
+La CI applique ShellCheck et teste aussi le refus des configurations absentes,
+des exemples non renseignés et d'une interface déjà présente. Elle signale les
+vulnérabilités et bloque celles HIGH/CRITICAL corrigeables. Le digest candidat
+publié est lui-même testé et scanné avant promotion vers les tags utilisateurs.
+Dependabot ouvre des PR quotidiennes pour Alpine et les Actions épinglées ;
+leur fusion reste conditionnée à la validation. Les hôtes ne sont pas mis à jour
+automatiquement.
+
+Voir [SECURITY.md](SECURITY.md), [CONTRIBUTING.md](CONTRIBUTING.md) et
+[CHANGELOG.md](CHANGELOG.md). Le code propre à ce dépôt est sous
+[licence MIT](LICENSE). Les logiciels embarqués gardent leurs licences respectives.
